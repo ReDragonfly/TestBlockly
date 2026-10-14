@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/blockly">
+        <file alias="index.html">blockly/index.html</file>
+        <file alias="blockly_compressed.js">blockly/blockly_compressed.js</file>
+        <!-- 简体中文界面文案表（Blockly.Msg），标准积木的 %{BKY_...} 占位符依赖它 -->
+        <file alias="msg.zh-hans.js">blockly/msg.zh-hans.js</file>
+        <file alias="blocks_compressed.js">blockly/blocks_compressed.js</file>
+        <file alias="lua_compressed.js">blockly/lua_compressed.js</file>
+        <file alias="custom-blocks.js">blockly/custom-blocks.js</file>
+        <file alias="custom-generators.js">blockly/custom-generators.js</file>
+        <file alias="toolbox.js">blockly/toolbox.js</file>
+        <file alias="bridge.js">blockly/bridge.js</file>
+        <file alias="blockly-config.js">blockly/blockly-config.js</file>
+        <!-- Blockly 图标精灵图：右下角缩放控件（放大/缩小/重置）和垃圾桶的图标都来自它 -->
+        <file alias="media/sprites.png">blockly/media/sprites.png</file>
+    </qresource>
+    <!-- Qt 自带的 qwebchannel.js 由 QtWebChannel 模块自动注册，无需在此声明，
+         前端通过 qrc:///qtwebchannel/qwebchannel.js 访问 -->
+</RCC>

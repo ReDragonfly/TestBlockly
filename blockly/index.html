@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Blockly 自动化测试编辑器</title>
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; }
+        #blocklyDiv { width: 100%; height: calc(100% - 50px); }
+        #toolbar {
+            height: 50px; display: flex; align-items: center;
+            padding: 0 16px; background: #f5f5f5;
+            border-bottom: 1px solid #ddd; gap: 12px;
+        }
+        #toolbar button {
+            padding: 6px 16px; border: 1px solid #ccc;
+            border-radius: 4px; cursor: pointer; background: #fff;
+        }
+        #toolbar button:hover { background: #e8e8e8; }
+        #status { margin-left: auto; color: #666; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <button id="btnRun">▶ 运行</button>
+        <button id="btnSave">保存工作区</button>
+        <button id="btnLoad">加载工作区</button>
+        <span id="status">就绪</span>
+    </div>
+    <div id="blocklyDiv"></div>
+
+    <!-- Blockly 核心（必须在生成器之前引入）
+         说明：本页 URL 为 qrc:/blockly/index.html，qrc 中资源均已映射到 /blockly/ 下的扁平路径，
+         故此处使用相对路径直接引用，不再重复 blockly/ 前缀。 -->
+    <script src="blockly_compressed.js"></script>
+    <!-- 文案表必须在 blocks_compressed.js 之前加载：
+         标准积木定义中大量使用 %{BKY_XXX} 占位符，占位符在积木定义时按 Blockly.Msg 替换，
+         Msg 为空则原样保留，界面上就会显示成 %{BKY_CONTROLS_IF_MSG_IF} 这类英文占位符。 -->
+    <script src="msg.zh-hans.js"></script>
+    <script src="blocks_compressed.js"></script>
+    <script src="lua_compressed.js"></script>
+
+    <!-- Qt WebChannel 提供的通信脚本 -->
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+
+    <!-- 项目自定义脚本 -->
+    <script src="custom-blocks.js"></script>
+    <script src="custom-generators.js"></script>
+    <script src="toolbox.js"></script>
+    <script src="bridge.js"></script>
+    <script src="blockly-config.js"></script>
+</body>
+</html>
