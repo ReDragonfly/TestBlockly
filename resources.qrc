@@ -14,6 +14,10 @@
         <!-- Blockly 图标精灵图：右下角缩放控件（放大/缩小/重置）和垃圾桶的图标都来自它 -->
         <file alias="media/sprites.png">blockly/media/sprites.png</file>
     </qresource>
+    <!-- 仪器/设备配置文件（ConfigurationManager 从 :/config/instruments.json 读取） -->
+    <qresource prefix="/config">
+        <file alias="instruments.json">config/instruments.json</file>
+    </qresource>
     <!-- Qt 自带的 qwebchannel.js 由 QtWebChannel 模块自动注册，无需在此声明，
          前端通过 qrc:///qtwebchannel/qwebchannel.js 访问 -->
 </RCC>

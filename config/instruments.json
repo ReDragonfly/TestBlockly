@@ -1,0 +1,11 @@
+{
+    "backend": "simulator",
+    "signalGenerator": { "resourceName": "TCPIP0::192.168.1.100::INSTR" },
+    "spectrumAnalyzer": { "resourceName": "TCPIP0::192.168.1.101::INSTR" },
+    "device": { "ip": "192.168.1.10", "port": 7 },
+    "signalPath": {
+        "defaultLineLoss": 2.5,
+        "noiseFloorDbm": -100.0,
+        "noiseStdDevDb": 0.15
+    }
+}

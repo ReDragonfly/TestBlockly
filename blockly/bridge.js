@@ -11,13 +11,26 @@ function initBridge() {
         scriptBridge = channel.objects.scriptBridge;
         window.scriptBridge = scriptBridge;
 
-        // 监听 C++ 端信号
+        // ---- 监听 C++ 端信号 ----
+        // 执行日志
         scriptBridge.logMessage.connect(function(msg) {
-            console.log('[C++ Log]', msg);
+            appendLog(msg);
         });
 
-        scriptBridge.executionFinished.connect(function(result) {
-            console.log('[C++] 执行结果:', result);
+        // 执行结束：taskId + "OK" / "ABORTED" / "ERROR: ..."
+        scriptBridge.executionFinished.connect(function(taskId, result) {
+            onExecutionFinished(taskId, result);
+        });
+
+        // 测试结果行
+        scriptBridge.testResultReceived.connect(
+            function(link, item, cond, target, value, unit, status) {
+                appendResult(link, item, cond, target, value, unit, status);
+            });
+
+        // 步骤高亮
+        scriptBridge.stepStarted.connect(function(blockId) {
+            onStepStarted(blockId);
         });
 
         setStatus('通信通道已就绪', 'green');

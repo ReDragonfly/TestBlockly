@@ -1,0 +1,593 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "test_log",
+        "id": "s1_l1",
+        "x": 40,
+        "y": 40,
+        "inputs": {
+          "MSG": {
+            "block": {
+              "type": "text",
+              "id": "s1_t1",
+              "fields": { "TEXT": "==== 示例1：信号源 + 频谱仪功率定标 ====" }
+            }
+          }
+        },
+        "next": {
+          "block": {
+            "type": "variables_set",
+            "id": "s1_set_freq",
+            "fields": { "VAR": { "id": "var_freq" } },
+            "inputs": {
+              "VALUE": {
+                "block": { "type": "math_number", "id": "s1_num_freq", "fields": { "NUM": 1745 } }
+              }
+            },
+            "next": {
+              "block": {
+                "type": "variables_set",
+                "id": "s1_set_power",
+                "fields": { "VAR": { "id": "var_power" } },
+                "inputs": {
+                  "VALUE": {
+                    "block": { "type": "math_number", "id": "s1_num_power", "fields": { "NUM": -30 } }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "sg_set_cw",
+                    "id": "s1_sg_cw",
+                    "inputs": {
+                      "FREQ": {
+                        "block": { "type": "variables_get", "id": "s1_get_freq1", "fields": { "VAR": { "id": "var_freq" } } }
+                      },
+                      "POWER": {
+                        "block": { "type": "variables_get", "id": "s1_get_power1", "fields": { "VAR": { "id": "var_power" } } }
+                      },
+                      "LOSS": {
+                        "block": { "type": "math_number", "id": "s1_num_loss", "fields": { "NUM": 2.5 } }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "sg_rf_on",
+                        "id": "s1_rf_on",
+                        "next": {
+                          "block": {
+                            "type": "test_wait",
+                            "id": "s1_wait",
+                            "inputs": {
+                              "MS": {
+                                "block": { "type": "math_number", "id": "s1_num_wait", "fields": { "NUM": 500 } }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "sa_set_cw",
+                                "id": "s1_sa_cw",
+                                "inputs": {
+                                  "FREQ": {
+                                    "block": { "type": "variables_get", "id": "s1_get_freq2", "fields": { "VAR": { "id": "var_freq" } } }
+                                  },
+                                  "REF": {
+                                    "block": { "type": "math_number", "id": "s1_num_ref", "fields": { "NUM": 20 } }
+                                  }
+                                },
+                                "next": {
+                                  "block": {
+                                    "type": "variables_set",
+                                    "id": "s1_set_measured",
+                                    "fields": { "VAR": { "id": "var_measured" } },
+                                    "inputs": {
+                                      "VALUE": { "block": { "type": "sa_get_power", "id": "s1_get_sa" } }
+                                    },
+                                    "next": {
+                                      "block": {
+                                        "type": "test_send_result",
+                                        "id": "s1_result",
+                                        "fields": {
+                                          "LINK": "功率定标",
+                                          "ITEM": "输出功率",
+                                          "UNIT": "dBm",
+                                          "STATUS": "Pass"
+                                        },
+                                        "inputs": {
+                                          "COND": {
+                                            "block": { "type": "text", "id": "s1_cond", "fields": { "TEXT": "1745MHz -30dBm" } }
+                                          },
+                                          "TARGET": {
+                                            "block": { "type": "text", "id": "s1_target", "fields": { "TEXT": "-30±0.5" } }
+                                          },
+                                          "VALUE": {
+                                            "block": { "type": "variables_get", "id": "s1_get_measured", "fields": { "VAR": { "id": "var_measured" } } }
+                                          }
+                                        },
+                                        "next": {
+                                          "block": { "type": "sg_rf_off", "id": "s1_rf_off" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "test_log",
+        "id": "s2_l1",
+        "x": 40,
+        "y": 1050,
+        "inputs": {
+          "MSG": {
+            "block": {
+              "type": "text",
+              "id": "s2_t1",
+              "fields": { "TEXT": "==== 示例2：设备参数 + 变量 + 文本拼接 + 循环 ====" }
+            }
+          }
+        },
+        "next": {
+          "block": {
+            "type": "omt_set_param",
+            "id": "s2_set_oid",
+            "fields": { "OID": "0C11" },
+            "inputs": {
+              "VALUE": {
+                "block": { "type": "math_number", "id": "s2_num_oid", "fields": { "NUM": 1745 } }
+              }
+            },
+            "next": {
+              "block": {
+                "type": "variables_set",
+                "id": "s2_set_devfreq",
+                "fields": { "VAR": { "id": "var_devfreq" } },
+                "inputs": {
+                  "VALUE": {
+                    "block": { "type": "omt_get_param", "id": "s2_get_oid", "fields": { "OID": "0C11" } }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "test_log",
+                    "id": "s2_log_join",
+                    "inputs": {
+                      "MSG": {
+                        "block": {
+                          "type": "text_join",
+                          "id": "s2_join",
+                          "extraState": { "itemCount": 3 },
+                          "inputs": {
+                            "ADD0": {
+                              "block": { "type": "text", "id": "s2_join_t0", "fields": { "TEXT": "设备频点 = " } }
+                            },
+                            "ADD1": {
+                              "block": { "type": "variables_get", "id": "s2_get_devfreq", "fields": { "VAR": { "id": "var_devfreq" } } }
+                            },
+                            "ADD2": {
+                              "block": { "type": "text", "id": "s2_join_t2", "fields": { "TEXT": " MHz" } }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "controls_for",
+                        "id": "s2_for",
+                        "fields": { "VAR": { "id": "var_i" } },
+                        "inputs": {
+                          "FROM": {
+                            "block": { "type": "math_number", "id": "s2_for_from", "fields": { "NUM": 1 } }
+                          },
+                          "TO": {
+                            "block": { "type": "math_number", "id": "s2_for_to", "fields": { "NUM": 3 } }
+                          },
+                          "BY": {
+                            "block": { "type": "math_number", "id": "s2_for_by", "fields": { "NUM": 1 } }
+                          },
+                          "DO": {
+                            "block": {
+                              "type": "test_log",
+                              "id": "s2_for_log",
+                              "inputs": {
+                                "MSG": {
+                                  "block": {
+                                    "type": "text_join",
+                                    "id": "s2_for_join",
+                                    "extraState": { "itemCount": 3 },
+                                    "inputs": {
+                                      "ADD0": {
+                                        "block": { "type": "text", "id": "s2_for_t0", "fields": { "TEXT": "第 " } }
+                                      },
+                                      "ADD1": {
+                                        "block": { "type": "variables_get", "id": "s2_get_i", "fields": { "VAR": { "id": "var_i" } } }
+                                      },
+                                      "ADD2": {
+                                        "block": { "type": "text", "id": "s2_for_t2", "fields": { "TEXT": " 轮循环" } }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "test_wait",
+                                  "id": "s2_for_wait",
+                                  "inputs": {
+                                    "MS": {
+                                      "block": { "type": "math_number", "id": "s2_for_ms", "fields": { "NUM": 100 } }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "next": {
+                          "block": {
+                            "type": "controls_repeat_ext",
+                            "id": "s2_repeat",
+                            "inputs": {
+                              "TIMES": {
+                                "block": { "type": "math_number", "id": "s2_repeat_times", "fields": { "NUM": 2 } }
+                              },
+                              "DO": {
+                                "block": {
+                                  "type": "test_log",
+                                  "id": "s2_repeat_log",
+                                  "inputs": {
+                                    "MSG": {
+                                      "block": {
+                                        "type": "text",
+                                        "id": "s2_repeat_text",
+                                        "fields": { "TEXT": "计数循环：重复执行两次" }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "test_wait",
+                                      "id": "s2_repeat_wait",
+                                      "inputs": {
+                                        "MS": {
+                                          "block": { "type": "math_number", "id": "s2_repeat_ms", "fields": { "NUM": 100 } }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "next": {
+                              "block": {
+                                "type": "test_log",
+                                "id": "s2_end",
+                                "inputs": {
+                                  "MSG": {
+                                    "block": { "type": "text", "id": "s2_end_text", "fields": { "TEXT": "==== 示例2结束 ====" } }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "test_log",
+        "id": "s3_l1",
+        "x": 40,
+        "y": 1850,
+        "inputs": {
+          "MSG": {
+            "block": {
+              "type": "text",
+              "id": "s3_t1",
+              "fields": { "TEXT": "==== 示例3：逻辑判断（需先执行示例1，if / 比较 / 与或非 / 布尔） ====" }
+            }
+          }
+        },
+        "next": {
+          "block": {
+            "type": "controls_if",
+            "id": "s3_if",
+            "extraState": { "elseIfCount": 1, "hasElse": true },
+            "inputs": {
+              "IF0": {
+                "block": {
+                  "type": "logic_operation",
+                  "id": "s3_and",
+                  "fields": { "OP": "AND" },
+                  "inputs": {
+                    "A": {
+                      "block": {
+                        "type": "logic_compare",
+                        "id": "s3_cmp_ge",
+                        "fields": { "OP": "GTE" },
+                        "inputs": {
+                          "A": {
+                            "block": { "type": "variables_get", "id": "s3_get_measured1", "fields": { "VAR": { "id": "var_measured" } } }
+                          },
+                          "B": {
+                            "block": { "type": "math_number", "id": "s3_num_low", "fields": { "NUM": -31 } }
+                          }
+                        }
+                      }
+                    },
+                    "B": {
+                      "block": {
+                        "type": "logic_compare",
+                        "id": "s3_cmp_le",
+                        "fields": { "OP": "LTE" },
+                        "inputs": {
+                          "A": {
+                            "block": { "type": "variables_get", "id": "s3_get_measured2", "fields": { "VAR": { "id": "var_measured" } } }
+                          },
+                          "B": {
+                            "block": { "type": "math_number", "id": "s3_num_high", "fields": { "NUM": -29 } }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "DO0": {
+                "block": {
+                  "type": "test_log",
+                  "id": "s3_do0",
+                  "inputs": {
+                    "MSG": {
+                      "block": { "type": "text", "id": "s3_do0_t", "fields": { "TEXT": "实测功率在 -31 ~ -29 dBm 范围内" } }
+                    }
+                  }
+                }
+              },
+              "IF1": {
+                "block": {
+                  "type": "logic_negate",
+                  "id": "s3_not",
+                  "inputs": {
+                    "BOOL": {
+                      "block": { "type": "logic_boolean", "id": "s3_bool_true", "fields": { "BOOL": "TRUE" } }
+                    }
+                  }
+                }
+              },
+              "DO1": {
+                "block": {
+                  "type": "test_log",
+                  "id": "s3_do1",
+                  "inputs": {
+                    "MSG": {
+                      "block": { "type": "text", "id": "s3_do1_t", "fields": { "TEXT": "（logic_negate 示例：NOT TRUE = false，所以本句不会执行）" } }
+                    }
+                  }
+                }
+              },
+              "ELSE": {
+                "block": {
+                  "type": "test_log",
+                  "id": "s3_else",
+                  "inputs": {
+                    "MSG": {
+                      "block": { "type": "text", "id": "s3_else_t", "fields": { "TEXT": "实测功率超出范围，请检查线损与连接" } }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "test_log",
+        "id": "s4_l1",
+        "x": 40,
+        "y": 2300,
+        "inputs": {
+          "MSG": {
+            "block": {
+              "type": "text",
+              "id": "s4_t1",
+              "fields": { "TEXT": "==== 示例4：数学运算 + math_change + while 循环 ====" }
+            }
+          }
+        },
+        "next": {
+          "block": {
+            "type": "variables_set",
+            "id": "s4_set_calc",
+            "fields": { "VAR": { "id": "var_calc" } },
+            "inputs": {
+              "VALUE": {
+                "block": {
+                  "type": "math_arithmetic",
+                  "id": "s4_arith",
+                  "fields": { "OP": "ADD" },
+                  "inputs": {
+                    "A": {
+                      "block": {
+                        "type": "math_round",
+                        "id": "s4_round",
+                        "fields": { "OP": "ROUND" },
+                        "inputs": {
+                          "NUM": {
+                            "block": {
+                              "type": "math_single",
+                              "id": "s4_abs",
+                              "fields": { "OP": "ABS" },
+                              "inputs": {
+                                "NUM": {
+                                  "block": { "type": "math_number", "id": "s4_num_neg", "fields": { "NUM": -3.7 } }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "B": {
+                      "block": { "type": "math_number", "id": "s4_num_one", "fields": { "NUM": 1 } }
+                    }
+                  }
+                }
+              }
+            },
+            "next": {
+              "block": {
+                "type": "test_log",
+                "id": "s4_log_calc",
+                "inputs": {
+                  "MSG": {
+                    "block": {
+                      "type": "text_join",
+                      "id": "s4_join_calc",
+                      "extraState": { "itemCount": 3 },
+                      "inputs": {
+                        "ADD0": {
+                          "block": { "type": "text", "id": "s4_jt0", "fields": { "TEXT": "计算结果 = " } }
+                        },
+                        "ADD1": {
+                          "block": { "type": "variables_get", "id": "s4_get_calc", "fields": { "VAR": { "id": "var_calc" } } }
+                        },
+                        "ADD2": {
+                          "block": { "type": "text", "id": "s4_jt2", "fields": { "TEXT": "（|−3.7| 四舍五入后 + 1）" } }
+                        }
+                      }
+                    }
+                  }
+                },
+                "next": {
+                  "block": {
+                    "type": "variables_set",
+                    "id": "s4_set_count",
+                    "fields": { "VAR": { "id": "var_count" } },
+                    "inputs": {
+                      "VALUE": {
+                        "block": { "type": "math_number", "id": "s4_num_zero", "fields": { "NUM": 0 } }
+                      }
+                    },
+                    "next": {
+                      "block": {
+                        "type": "controls_whileUntil",
+                        "id": "s4_while",
+                        "fields": { "MODE": "UNTIL" },
+                        "inputs": {
+                          "BOOL": {
+                            "block": {
+                              "type": "logic_compare",
+                              "id": "s4_while_cmp",
+                              "fields": { "OP": "GTE" },
+                              "inputs": {
+                                "A": {
+                                  "block": { "type": "variables_get", "id": "s4_get_count1", "fields": { "VAR": { "id": "var_count" } } }
+                                },
+                                "B": {
+                                  "block": { "type": "math_number", "id": "s4_while_three", "fields": { "NUM": 3 } }
+                                }
+                              }
+                            }
+                          },
+                          "DO": {
+                            "block": {
+                              "type": "math_change",
+                              "id": "s4_change",
+                              "fields": { "VAR": { "id": "var_count" } },
+                              "inputs": {
+                                "DELTA": {
+                                  "block": { "type": "math_number", "id": "s4_delta", "fields": { "NUM": 1 } }
+                                }
+                              },
+                              "next": {
+                                "block": {
+                                  "type": "test_log",
+                                  "id": "s4_while_log",
+                                  "inputs": {
+                                    "MSG": {
+                                      "block": {
+                                        "type": "text_join",
+                                        "id": "s4_while_join",
+                                        "extraState": { "itemCount": 3 },
+                                        "inputs": {
+                                          "ADD0": {
+                                            "block": { "type": "text", "id": "s4_wt0", "fields": { "TEXT": "循环中：计数 = " } }
+                                          },
+                                          "ADD1": {
+                                            "block": { "type": "variables_get", "id": "s4_get_count2", "fields": { "VAR": { "id": "var_count" } } }
+                                          },
+                                          "ADD2": {
+                                            "block": { "type": "text", "id": "s4_wt2", "fields": { "TEXT": "" } }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  "next": {
+                                    "block": {
+                                      "type": "test_wait",
+                                      "id": "s4_while_wait",
+                                      "inputs": {
+                                        "MS": {
+                                          "block": { "type": "math_number", "id": "s4_while_ms", "fields": { "NUM": 100 } }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "next": {
+                          "block": {
+                            "type": "test_log",
+                            "id": "s4_end",
+                            "inputs": {
+                              "MSG": {
+                                "block": { "type": "text", "id": "s4_end_text", "fields": { "TEXT": "计数达到 3，while 循环结束" } }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "variables": [
+    { "name": "频率", "id": "var_freq" },
+    { "name": "目标功率", "id": "var_power" },
+    { "name": "实测功率", "id": "var_measured" },
+    { "name": "设备频点", "id": "var_devfreq" },
+    { "name": "循环变量", "id": "var_i" },
+    { "name": "计算结果", "id": "var_calc" },
+    { "name": "计数", "id": "var_count" }
+  ]
+}
